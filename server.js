@@ -6,15 +6,25 @@ const express = require("express");
 const cors = require("cors");
 const connectDB = require("./config/db");
 const colors = require("colors");
+
+// --- DATABASE CONNECTION ---
 connectDB();
+
 // Initialize an Express application
 // We call the express() function to create a new application instance.
 // This 'app' object will be used to configure our server.
 const app = express();
+
+// MIDDLEWARE-----
+
 app.use(express.json());
 app.use(cors());
 
 const PORT = process.env.PORT || 5000;
+
+// --- ROUTES ---
+
+app.use("/api/users", require("./routes/userRoutes"));
 
 app.get("/", (req, res) => {
   // The 'req' object contains information about the incoming request (e.g., headers, query parameters).
@@ -31,4 +41,3 @@ app.get("/", (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server is UP and RUNNING running on port ${PORT}`.yellow.bold);
 });
-
