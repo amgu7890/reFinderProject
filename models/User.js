@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 
-
 const userSchema = new mongoose.Schema(
   {
     name: {
@@ -34,4 +33,16 @@ const userSchema = new mongoose.Schema(
 // Mongoose will automatically look for the plural, lowercased version of your model name for the collection.
 // Thus, the 'User' model will be for the 'users' collection in the database.
 // This exported model can now be used in other parts of our application (like our route controllers) to interact with the 'users' collection.
+
+userSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) {
+    return next();
+  }
+
+  const salt = await bcrypt.genSalt(10);
+  this.password = await bcrypt.hash(this.password, salt);
+
+  next();
+});
+
 module.exports = new mongoose.model("User", userSchema);
