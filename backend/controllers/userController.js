@@ -1,4 +1,4 @@
-const User = require("../models/User");
+const User = require("../backend/models/User");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const generateToken = (id) => {
@@ -22,6 +22,7 @@ const registerUser = async (req, res) => {
 
     const userExists = await User.findOne({ email });
     if (userExists) {
+      res.status(400);
       throw new Error("User already exists");
     }
 
